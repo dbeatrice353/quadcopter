@@ -1,2 +1,2 @@
 # quadcopter
-A quadcopter that runs on a PIC microcontroller
+A quadcopter that runs on an 8-bit PIC microcontroller
