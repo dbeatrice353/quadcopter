@@ -10,26 +10,26 @@
 #define UINT8 uint8_t
 #define
 
+struct Axis{
+  UINT8 current_value;
+  UINT8 target_value;
+  UINT8 previous_error;
+  UINT8 cumulative_error;
+  UINT8 control_variable;
+  UINT8 P;
+  UINT8 I;
+  UINT8 D;
+  UINT8 gyro;
+}
 
 struct Attitude{
-  UINT8 roll;
-  UINT8 pitch;
-  UINT8 yaw;
+  Axis roll;
+  Axis pitch;
+  Axis yaw;
 };
-
-struct MotorOutputs{
-  UINT8 frontLeft;
-  UINT8 frontRight;
-  UINT8 backLeft;
-  UINT8 backRight;
-}
 
 void update_motor_outputs(UINT8 throttle, Attitude *control_variables, MotorOutputs *motor_outputs);
 
-void update_control_variables(UINT8 current_value,
-                              UINT8 target_value,
-                              UINT8 *previous_error,
-                              UINT8 *cumulative_error,
-                              UINT8 *control_variable);
+void update_control_variables(Axis *axis);
 
 #endif
