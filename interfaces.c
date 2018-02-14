@@ -7,11 +7,65 @@
 #include <stdint.h>
 
 
+//---------------------------------------------------------//
+//               tristate register buffers                 //
+//---------------------------------------------------------//
 
-void output_init(void){
-    TRISA = 0xF0;
-    TRISB = 0xF0;
+unsigned char TRISA_buffer = 0xFF;
+unsigned char TRISB_buffer = 0xFF;
+unsigned char TRISC_buffer = 0xFF;
+
+//---------------------------------------------------------//
+//                     status LEDs                         //
+//---------------------------------------------------------//
+
+void status_leds_init(void){
+    TRISC_buffer &= 0x3F;
+    TRISC = TRISC_buffer;
+    PORTC &= 0x3F;
 }
+
+void red_status_on(void){
+    PORTC |= 0x40;
+}
+
+void red_status_off(void){
+    PORTC &= 0xBF;
+}
+
+void green_status_on(void){
+    PORTC |= 0x80;
+}
+
+void green_status_off(void){
+    PORTC &= 0xEF;
+}
+
+//---------------------------------------------------------//
+//                     push button                         //
+//---------------------------------------------------------//
+
+void push_button_init(void){
+    TRISB_buffer |= 0x20;
+    TRISB = TRISB_buffer;
+}
+
+int read_push_button(void){
+   return (PORTB & 0x20)>>5;
+}
+
+
+ //---------------------------------------------------------//
+ //                 debug-LED array output                  //
+ //---------------------------------------------------------//
+
+
+ void output_init(void){
+     TRISA_buffer &= 0xF0;
+     TRISB_buffer &= 0xF0;
+     TRISA = TRISA_buffer;
+     TRISB = TRISB_buffer;
+ }
 
 void write_to_output(unsigned char byte){
   PORTA = (PORTA & 0xF0) | (byte & 0x0F);
@@ -22,16 +76,10 @@ void write_to_output(unsigned char byte){
 //---------------------------------------------------------//
 //                          I2C                            //
 //---------------------------------------------------------//
-// portions of this code were taken from here: http://www.robot-electronics.co.uk/i2c-tutorial
 
-/*
- * The "TRISC" register is write-only, prohibiting
- * operations like "TRISC |= 0x01" that select
- * individual bits. The work around here is to set
- * and clear individual bits of a buffer (TRISC_buffer),
- * then write the whole buffer to TRISC.
- */
-unsigned char TRISC_buffer = 0xFF;
+// portions of the I2C code were taken from here:
+// http://www.robot-electronics.co.uk/i2c-tutorial
+
 
  void I2C_data_high(void){
     TRISC_buffer |= 0x01;
@@ -138,28 +186,3 @@ void I2C_init(void){
      I2C_data_high();
      *buffer = data;
  }
- /*
-int main(int argc, char** argv) {
-    char buffer;
-
-    I2C_init();
-    output_init();
-
-
-    while(1){
-
-        __delay_ms(1000);
-        I2C_start();
-        I2C_tx(0xD6); // SAD+W
-        I2C_tx(0x0F); // SUB      // "who am i?" register
-        I2C_start();  // SAD+R
-        I2C_tx(0xD7); // SAD+R
-        I2C_rx(0,&buffer);
-        I2C_stop();
-
-        write_to_output(buffer);
-
-    }
-    return 0;
-}
-*/
