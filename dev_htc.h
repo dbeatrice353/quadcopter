@@ -1,9 +1,14 @@
 #ifndef DEV_HTC
 #define DEV_HTC
 
-int TRISIO;
-int WPU;
-int GP4;
-int GP5;
+#include <stdint>
+
+uint8_t TRISA;
+uint8_t TRISB;
+uint8_t TRISC;
+
+uint8_t PORTA;
+uint8_t PORTB;
+uint8_t PORTC;
 
 #endif

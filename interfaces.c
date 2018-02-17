@@ -5,15 +5,8 @@
 #endif
 
 #include <stdint.h>
+#include "interfaces.h"
 
-
-//---------------------------------------------------------//
-//               tristate register buffers                 //
-//---------------------------------------------------------//
-
-unsigned char TRISA_buffer = 0xFF;
-unsigned char TRISB_buffer = 0xFF;
-unsigned char TRISC_buffer = 0xFF;
 
 //---------------------------------------------------------//
 //                     status LEDs                         //
