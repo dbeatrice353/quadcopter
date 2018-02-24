@@ -8,7 +8,7 @@ typedef struct {
   uint8_t target_value;
   uint8_t previous_error;
   uint8_t cumulative_error;
-  uint8_t control;
+  uint8_t control_var;
   uint8_t P;
   uint8_t I;
   uint8_t D;
