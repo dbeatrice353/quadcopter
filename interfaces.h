@@ -1,6 +1,11 @@
 #ifndef _INTERFACES_
 #define _INTERFACES_
 
+extern unsigned char TRISA_buffer;
+extern unsigned char TRISB_buffer;
+extern unsigned char TRISC_buffer;
+
+
 enum IMU_addresses{
     IMU_I2C_ADDR_W   = 0xD6,  // IMU I2C slave address + write bit
     IMU_I2C_ADDR_R   = 0xD7,  // IMU I2C slave address + read bit
@@ -57,7 +62,7 @@ extern void push_button_init(void);
 extern int read_push_button(void);
 
 extern void output_init(void);
-extern void write_to_output(unsigned char byte);
+extern void write_to_output(unsigned char value);
 
 extern void I2C_init(void);
 extern void I2C_start(void);
@@ -65,7 +70,6 @@ extern void I2C_stop(void);
 extern void I2C_tx(unsigned char buffer);
 extern void I2C_rx(int ack, char *buffer);
 
-extern void IMU_init(void);
 
 #define I2C_DATA_HIGH()\
         TRISC_buffer |= 0x01;\
@@ -104,5 +108,16 @@ extern void IMU_init(void);
                  I2C_tx(reg);\
                  I2C_tx(data);\
                  I2C_stop();
+
+
+#define FRONT_LEFT_LOW() PORTC &= 0xF7
+#define FRONT_LEFT_HIGH() PORTC |= 0x08
+#define FRONT_RIGHT_LOW() PORTC &= 0xFB
+#define FRONT_RIGHT_HIGH() PORTC |= 0x04
+
+#define BACK_LEFT_LOW() PORTC &= 0xDF
+#define BACK_LEFT_HIGH() PORTC |= 0x20
+#define BACK_RIGHT_LOW() PORTC &= 0xEF
+#define BACK_RIGHT_HIGH() PORTC |= 0x10
 
 #endif

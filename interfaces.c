@@ -8,25 +8,10 @@
 #include "interfaces.h"
 
 
+
 unsigned char TRISA_buffer = 0xFF;
 unsigned char TRISB_buffer = 0xFF;
 unsigned char TRISC_buffer = 0xFF;
-
-
-void IMU_init(void){
-
-    uint8_t control_bits = 0x00;
-    // initialize the accelerometer in the IMU
-    control_bits = IMU_ACC_BANDWIDTH_100Hz | IMU_ACC_RANGE_16G | IMU_ACC_SAMPLE_RATE_416Hz;
-    IMU_WRITE(IMU_CTRL1, control_bits);
-    IMU_READ(IMU_CTRL4, &control_bits);
-    control_bits |= IMU_ACC_BANDWIDTH_SELECT;
-    IMU_WRITE(IMU_CTRL4, control_bits);
-
-    // initialize the gyroscope in the IMU
-    IMU_WRITE(IMU_CTRL2, IMU_GYRO_RANGE_2000dps | IMU_GYRO_SAMPLE_RATE_416Hz);
- }
-
 
 
 void status_leds_init(void){
