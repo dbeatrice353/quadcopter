@@ -47,10 +47,6 @@ enum gyroscope_config{
     IMU_GYRO_SAMPLE_RATE_416Hz = 0x60
 };
 
-unsigned char TRISA_buffer = 0xFF;
-unsigned char TRISB_buffer = 0xFF;
-unsigned char TRISC_buffer = 0xFF;
-
 extern void status_leds_init(void);
 extern void red_status_on(void);
 extern void red_status_off(void);
@@ -63,12 +59,13 @@ extern int read_push_button(void);
 extern void output_init(void);
 extern void write_to_output(unsigned char byte);
 
-
 extern void I2C_init(void);
 extern void I2C_start(void);
 extern void I2C_stop(void);
 extern void I2C_tx(unsigned char buffer);
 extern void I2C_rx(int ack, char *buffer);
+
+extern void IMU_init(void);
 
 #define I2C_DATA_HIGH()\
         TRISC_buffer |= 0x01;\

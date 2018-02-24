@@ -10,19 +10,23 @@
     #ifndef _XTAL_FREQ
     #define _XTAL_FREQ 4000000 // 4MHz
     #endif //_XTAL_FREQ
+#else
+    #include "dev_htc.h"
 #endif //__XC8
 
 #include <stdint.h>
 #include "quadcopter.h"
 #include "interfaces.h"
 
-#define N 10
+#define FILTER_LENGTH 10
 
 int main(void) {
     char buffer;
-    int8_t gyro[N];
-    int8_t mean;
     uint8_t i;
+    int8_t temp;
+    Axis roll;
+    Axis pitch;
+    Axis yaw;
 
     __delay_ms(100);
 
@@ -30,24 +34,24 @@ int main(void) {
     status_leds_init();
     push_button_init();
     output_init();
-
-    //IMU_init();
-
-    buffer = 0x01;
-    write_to_output(buffer);
+    IMU_init();
 
     red_status_off();
     green_status_on();
 
     //OPTION = 0x07;
     while(1){
-        mean = 0;
-        for(i=0;i<N;i++){
-            __delay_ms(1);
-            IMU_READ(IMU_GYRO_X_U,&gyro[i]);
-            mean += gyro[i]/N;
+
+        // sample IMU output
+        for(i=0;i<FILTER_LENGTH;i++){
+            IMU_READ(IMU_GYRO_X_U,&temp);
+            roll.current_value += temp/FILTER_LENGTH;
+            IMU_READ(IMU_GYRO_Y_U,&temp);
+            pitch.current_value += temp/FILTER_LENGTH;
+            IMU_READ(IMU_GYRO_Z_U,&temp);
+            yaw.current_value += temp/FILTER_LENGTH;
         }
-        write_to_output(mean);
+
     }
 
     return 0;

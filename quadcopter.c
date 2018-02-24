@@ -1,11 +1,11 @@
 
 #include "quadcopter.h"
 
-void update_motor_outputs(uint8_t throttle, Attitude *attitude, MotorOutputs *motor_outputs){
-  motor_outputs->front_right = throttle - attitude->pitch.control_var + attitude->roll.control_var - attitude->yaw.control_var;
-  motor_outputs->back_right  = throttle + attitude->pitch.control_var + attitude->roll.control_var + attitude->yaw.control_var;
-  motor_outputs->back_left   = throttle + attitude->pitch.control_var - attitude->roll.control_var - attitude->yaw.control_var;
-  motor_outputs->front_left  = throttle - attitude->pitch.control_var - attitude->roll.control_var - attitude->yaw.control_var;
+void update_motor_outputs(Axis *pitch, Axis *yaw, Axis *roll, uint8_t throttle, MotorOutputs *motor_outputs){
+  motor_outputs->front_right = throttle - pitch->control_var + roll->control_var - yaw->control_var;
+  motor_outputs->back_right  = throttle + pitch->control_var + roll->control_var + yaw->control_var;
+  motor_outputs->back_left   = throttle + pitch->control_var - roll->control_var - yaw->control_var;
+  motor_outputs->front_left  = throttle - pitch->control_var - roll->control_var - yaw->control_var;
 }
 
 void update_control_variables(Axis *axis){

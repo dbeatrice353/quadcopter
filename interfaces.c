@@ -8,6 +8,10 @@
 #include "interfaces.h"
 
 
+unsigned char TRISA_buffer = 0xFF;
+unsigned char TRISB_buffer = 0xFF;
+unsigned char TRISC_buffer = 0xFF;
+
 
 void IMU_init(void){
 
@@ -97,8 +101,13 @@ void I2C_start(void){
  }
 
  void I2C_tx(unsigned char buffer){
-     uint8_t i;
+     #ifdef __XC8
      static bit ack_bit;
+     #else
+     int ack_bit;
+     #endif
+     uint8_t i;
+
      for(i=8;i;i--){
          if(buffer&0x80){
              I2C_DATA_HIGH();

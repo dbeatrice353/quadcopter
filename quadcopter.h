@@ -12,7 +12,6 @@ typedef struct {
   uint8_t P;
   uint8_t I;
   uint8_t D;
-  uint8_t gyro;
 } Axis;
 
 typedef struct{
@@ -28,7 +27,7 @@ typedef struct{
   uint8_t back_left;
 } MotorOutputs;
 
-extern void update_motor_outputs(uint8_t throttle, Attitude *attitude, MotorOutputs *motor_outputs);
+extern void update_motor_outputs(Axis *pitch, Axis *yaw, Axis *roll, uint8_t throttle, MotorOutputs *motor_outputs);
 
 extern void update_control_variables(Axis *axis);
 
