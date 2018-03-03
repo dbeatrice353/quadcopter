@@ -40,19 +40,26 @@ void PWM_update(Axis *pitch, Axis *yaw, Axis *roll, uint8_t throttle, MotorOutpu
   motor_outputs->front_left = throttle - pitch->control_var - roll->control_var - yaw->control_var;
 }
 
+void reset_pwm_counters(PWMCounters *pwm_counters){
+  pwm_counters->front_left = 0;
+  pwm_counters->front_right = 0;
+  pwm_counters->back_left = 0;
+  pwm_counters->back_right = 0;
+}
+
 void update_control_variables(Axis *axis){
 
-  int16_t error;
-  int16_t error_delta;
+  int8_t error;
+  int8_t error_delta;
 
   error = axis->target_value - axis->current_value;
   axis->cumulative_error += error;
   error_delta = error - axis->previous_error;
   axis->previous_error = error;
 
-  axis->control_var = (axis->P*error)>>8;
-  axis->control_var += (axis->I*axis->cumulative_error)>>8;
-  axis->control_var += (axis->D*error_delta)>>8;
+  axis->control_var = axis->P*error;
+  axis->control_var += axis->I*axis->cumulative_error;
+  axis->control_var += axis->D*error_delta;
 }
 
 void update_motor_outputs(MotorOutputs *motor_outputs, PWMCounters *pwm_counters){
@@ -75,7 +82,7 @@ void update_motor_outputs(MotorOutputs *motor_outputs, PWMCounters *pwm_counters
         BACK_LEFT_LOW();
     }
 
-    if(motor_outputs->back_right > pwm_counters->back_right++){
+    if(motor_outputs->back_right > factor*pwm_counters->back_right++){
         BACK_RIGHT_HIGH();
     }else{
         BACK_RIGHT_LOW();

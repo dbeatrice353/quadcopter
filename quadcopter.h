@@ -10,10 +10,10 @@
 #include <stdint.h>
 
 typedef struct {
-  int16_t current_value;
-  int16_t target_value;
-  int16_t previous_error;
-  int16_t cumulative_error;
+  int8_t current_value;
+  int8_t target_value;
+  int8_t previous_error;
+  int8_t cumulative_error;
   uint8_t P;
   uint8_t I;
   uint8_t D;
@@ -41,15 +41,11 @@ typedef struct{
 }PWMCounters;
 
 extern void IMU_init(void);
-
 extern void PWM_init(MotorOutputs *motor_outputs, PWMCounters *pwm_counters);
-
 extern void axis_init(Axis *axis);
-
 extern void PWM_update(Axis *pitch, Axis *yaw, Axis *roll, uint8_t throttle, MotorOutputs *motor_outputs);
-
+extern void reset_pwm_counters(PWMCounters *pwm_counters);
 extern void update_motor_outputs(MotorOutputs *motor_outputs, PWMCounters *pwm_counters);
-
 extern void update_control_variables(Axis *axis);
 
 #endif
