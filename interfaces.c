@@ -7,12 +7,9 @@
 #include <stdint.h>
 #include "interfaces.h"
 
-
-
 unsigned char TRISA_buffer = 0xFF;
 unsigned char TRISB_buffer = 0xFF;
 unsigned char TRISC_buffer = 0xFF;
-
 
 void status_leds_init(void){
     TRISC_buffer &= 0x3F;

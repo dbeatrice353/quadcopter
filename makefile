@@ -1,11 +1,18 @@
 
 CC = gcc
+FLAGS = -ggdb
 
-main.exe: main.c quadcopter.o interfaces.o quadcopter.h interfaces.h
-	$(CC) main.c quadcopter.o interfaces.o -o main.exe
+main.exe: main.c quadcopter.o interfaces.o dev_htc.o quadcopter.h interfaces.h
+	$(CC) $(FLAGS) main.c quadcopter.o interfaces.o dev_htc.o -o main.exe
 
 quadcopter.o: quadcopter.c quadcopter.h
-	$(CC) -c quadcopter.c -o quadcopter.o
+	$(CC) $(FLAGS) -c quadcopter.c -o quadcopter.o
 
 interfaces.o: interfaces.c interfaces.h
-	$(CC) -c interfaces.c -o interfaces.o
+	$(CC) $(FLAGS) -c interfaces.c -o interfaces.o
+
+dev_htc.o: dev_htc.c dev_htc.h
+	$(CC) $(FLAGS) -c dev_htc.c -o dev_htc.o
+
+clean:
+	rm -rf ./*.o

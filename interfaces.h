@@ -4,6 +4,7 @@
 extern unsigned char TRISA_buffer;
 extern unsigned char TRISB_buffer;
 extern unsigned char TRISC_buffer;
+extern unsigned char PORTC_buffer;
 
 
 enum IMU_addresses{
