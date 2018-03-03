@@ -94,22 +94,26 @@ extern void I2C_rx(int ack, char *buffer);
 #define I2C_READ_DATA() (PORTC & 0x01)
 #define I2C_READ_CLK() (PORTC & 0x02)>>1
 
-#define IMU_READ(reg, buffer)\
-                I2C_start();\
-                I2C_tx(IMU_I2C_ADDR_W);\
-                I2C_tx(reg);\
-                I2C_start();\
-                I2C_tx(IMU_I2C_ADDR_R);\
-                I2C_rx(0, buffer);\
-                I2C_stop();
+#ifdef __XC8
+  #define IMU_READ(reg, buffer)\
+                  I2C_start();\
+                  I2C_tx(IMU_I2C_ADDR_W);\
+                  I2C_tx(reg);\
+                  I2C_start();\
+                  I2C_tx(IMU_I2C_ADDR_R);\
+                  I2C_rx(0, buffer);\
+                  I2C_stop();
 
-#define IMU_WRITE(reg, data)\
-                 I2C_start();\
-                 I2C_tx(IMU_I2C_ADDR_W);\
-                 I2C_tx(reg);\
-                 I2C_tx(data);\
-                 I2C_stop();
-
+  #define IMU_WRITE(reg, data)\
+                   I2C_start();\
+                   I2C_tx(IMU_I2C_ADDR_W);\
+                   I2C_tx(reg);\
+                   I2C_tx(data);\
+                   I2C_stop();
+#else
+  #define IMU_READ(reg, buffer)   // do nothing when running on x86
+  #define IMU_WRITE(reg, data)
+#endif
 
 #define FRONT_LEFT_LOW() PORTC &= 0xF7
 #define FRONT_LEFT_HIGH() PORTC |= 0x08

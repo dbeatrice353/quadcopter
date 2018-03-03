@@ -34,71 +34,56 @@ int main(void){
 
     __delay_ms(100);
 
+    axis_init(&pitch);
+    axis_init(&yaw);
+    axis_init(&roll);
+
     I2C_init();
     status_leds_init();
     push_button_init();
     output_init();
     IMU_init();
-    PWM_init();
+    PWM_init(&motor_outputs, &pwm_counters);
 
     red_status_off();
     green_status_on();
 
-    pwm_counters.front_left = 0;
-    pwm_counters.front_right = 0;
-    pwm_counters.back_left = 0;
-    pwm_counters.back_right = 0;
-
-    motor_outputs.front_left = 50;
-    motor_outputs.front_right = 100;
-    motor_outputs.back_left = 150;
-    motor_outputs.back_right = 200;
-
     write_to_output(0x81);
 
-
     //OPTION = 0x07;
-    while(1){
+    int j = 0;
+    while(j++ < 10){
 
         // sample IMU output
+        IMU_READ(IMU_GYRO_X_L,&temp[0]);
+        IMU_READ(IMU_GYRO_X_U,&temp[1]);
+        //roll.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
+        roll.current_value = 0;
+        IMU_READ(IMU_GYRO_Y_L,&temp[0]);
+        IMU_READ(IMU_GYRO_Y_U,&temp[1]);
+        //pitch.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
+        pitch.current_value = 1000;
+        IMU_READ(IMU_GYRO_Z_L,&temp[0]);
+        IMU_READ(IMU_GYRO_Z_U,&temp[1]);
+        //yaw.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
+        yaw.current_value = 0;
+
         update_control_variables(&roll);
         update_control_variables(&pitch);
         update_control_variables(&yaw);
 
-        IMU_READ(IMU_GYRO_X_L,&temp[0]);
-        IMU_READ(IMU_GYRO_X_U,&temp[1]);
-        roll.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
-        IMU_READ(IMU_GYRO_Y_L,&temp[0]);
-        IMU_READ(IMU_GYRO_Y_U,&temp[1]);
-        pitch.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
-        IMU_READ(IMU_GYRO_Z_L,&temp[0]);
-        IMU_READ(IMU_GYRO_Z_U,&temp[1]);
-        yaw.current_value += ((int16_t)temp[0] | (int16_t)temp[1] << 8)/FILTER_LENGTH;
+        printf("ctrl: %i, %i, %i\n",roll.control_var,pitch.control_var, yaw.control_var);
+        printf("Mout: %i, %i, %i\n",motor_outputs.front_right,motor_outputs.front_left,motor_outputs.back_right,motor_outputs.back_left);
 
         PWM_update(&pitch, &yaw, &roll, 1, &motor_outputs);
 
         print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        update_motor_outputs(&motor_outputs, &pwm_counters);
-        print_motor_outputs();
-        break;
+        int i;
+        for(i=0; i< 10; i++){
+          update_motor_outputs(&motor_outputs, &pwm_counters);
+          print_motor_outputs();
+        }
+        printf("-----------\n");
     }
 
     return 0;

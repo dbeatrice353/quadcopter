@@ -22,8 +22,6 @@ void push_button_init(void){
     TRISB = TRISB_buffer;
 }
 
-
-
 void output_init(void){
     TRISA_buffer &= 0xF0;
     TRISB_buffer &= 0xF0;
@@ -35,7 +33,6 @@ void write_to_output(unsigned char byte){
   PORTA = (PORTA & 0xF0) |(byte & 0x0F);
   PORTB = (PORTB & 0xF0) | byte>>4;
 }
-
 
 void red_status_on(void){
     PORTC |= 0x40;

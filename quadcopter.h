@@ -42,7 +42,9 @@ typedef struct{
 
 extern void IMU_init(void);
 
-extern void PWM_init(void);
+extern void PWM_init(MotorOutputs *motor_outputs, PWMCounters *pwm_counters);
+
+extern void axis_init(Axis *axis);
 
 extern void PWM_update(Axis *pitch, Axis *yaw, Axis *roll, uint8_t throttle, MotorOutputs *motor_outputs);
 
